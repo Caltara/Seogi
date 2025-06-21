@@ -1,4 +1,7 @@
 import streamlit as st
+import openai
+
+# Set the API key from Streamlit Cloud secrets
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 def generate_content_ideas(business_type, keyword):
@@ -13,10 +16,9 @@ def write_blog_post(title, keyword):
     return chat_with_openai(prompt)
 
 def chat_with_openai(prompt):
-    openai.api_key = os.getenv("OPENAI_API_KEY")
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
     )
-    return response.choices[0].message.content
+    return response.choices[0].message.content.strip()
