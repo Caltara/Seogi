@@ -1,8 +1,8 @@
 import streamlit as st
-import openai
+from openai import OpenAI, OpenAIError
 
-# Set the API key from Streamlit Cloud secrets
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+# Use the new client-based SDK
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 def generate_content_ideas(business_type, keyword):
     prompt = f"Suggest 5 SEO blog post ideas for a {business_type} targeting the keyword: {keyword}"
@@ -16,9 +16,12 @@ def write_blog_post(title, keyword):
     return chat_with_openai(prompt)
 
 def chat_with_openai(prompt):
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.7,
-    )
-    return response.choices[0].message.content.strip()
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+        )
+        return response.choices[0].message.content.strip()
+    except OpenAIError as e:
+        return f"❌ OpenAI API Error: {str(e)}"
