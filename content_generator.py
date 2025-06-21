@@ -1,4 +1,5 @@
-import openai
+import streamlit as st
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 def generate_content_ideas(business_type, keyword):
     prompt = f"Suggest 5 SEO blog post ideas for a {business_type} targeting the keyword: {keyword}"
