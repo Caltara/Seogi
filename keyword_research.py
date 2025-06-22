@@ -6,15 +6,29 @@ def suggest_keywords(topic):
 
     prompt = f"""
     You are an expert SEO strategist. Given the topic: "{topic}", provide:
-    
-    1. A list of 8–10 high-value SEO keywords (including short- and long-tail keywords).
-    2. Group those keywords into 2–3 keyword clusters by topic relevance.
-    3. Suggest 1 blog topic idea for each cluster that would perform well in search engines.
-    
-    Format:
-    - Keyword List
-    - Keyword Clusters
-    - Blog Topic Suggestions
+
+    1. A list of 8–10 high-value SEO keywords (short- and long-tail).
+    2. Group those into 2–3 keyword clusters with clear labels.
+    3. Suggest 1 blog topic per cluster, formatted like:
+       - Blog Title (based on: keyword)
+
+    Format your output in markdown like this:
+    ## Keyword List
+    - keyword 1
+    - keyword 2
+    ...
+
+    ## Keyword Clusters
+    ### Cluster Name 1
+    - keyword a
+    - keyword b
+
+    ### Cluster Name 2
+    ...
+
+    ## Blog Topic Suggestions
+    - Blog Title A (based on: keyword a)
+    - Blog Title B (based on: keyword x)
     """
 
     try:
@@ -26,8 +40,7 @@ def suggest_keywords(topic):
             ],
             temperature=0.7
         )
-
-        return response.choices[0].message.content
+        return response.choices[0].message.content.strip()
 
     except Exception as e:
-        return f"❌ Error generating keywords: {str(e)}"
+        return f"❌ Error generating keyword suggestions: {str(e)}"
