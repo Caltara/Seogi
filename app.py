@@ -1,7 +1,6 @@
 import streamlit as st
-
 from seo_audit import audit_seo
-from blog_writer import write_blog_post
+from blog_writer import write_blog_post, suggest_blog_titles
 from keyword_research import suggest_keywords
 from page_optimizer import optimize_page
 from backlink_monitor import check_backlinks
@@ -35,11 +34,29 @@ if menu == "SEO Audit":
 # --- Blog Post Writer ---
 elif menu == "Write SEO Blog Post":
     st.header("✍️ Write an SEO Blog Post")
-    title = st.text_input("Blog Post Title")
+
     keyword = st.text_input("Target Keyword")
-    if st.button("Generate Blog Post") and title and keyword:
-        blog = write_blog_post(title, keyword)
-        st.markdown(blog)
+    audience = st.text_input("Who is your audience? (e.g., small business owners, real estate agents)")
+
+    if st.button("Suggest Blog Titles") and keyword and audience:
+        titles = suggest_blog_titles(keyword, audience)
+        st.session_state["suggested_titles"] = titles
+
+    if "suggested_titles" in st.session_state:
+        title = st.selectbox("Choose a Blog Post Title", st.session_state["suggested_titles"])
+        st.markdown(f"🔎 Seogi's suggestion: **{title}**")
+    else:
+        title = st.text_input("Or write your own blog post title")
+
+    tone = st.selectbox("Tone of Voice", ["Professional", "Friendly", "Persuasive", "Casual", "Educational"])
+    cta = st.text_input("Call to Action (e.g., Schedule a consultation, Sign up for our newsletter)")
+
+    if st.button("Generate Blog Post"):
+        if title and keyword and audience and tone and cta:
+            blog = write_blog_post(title, keyword, audience, tone, cta)
+            st.markdown(blog)
+        else:
+            st.warning("Please fill in all fields to generate a blog post.")
 
 # --- Keyword Research ---
 elif menu == "Keyword Research":
