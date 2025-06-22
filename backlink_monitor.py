@@ -1,7 +1,9 @@
-import openai
+from openai import OpenAI
 import streamlit as st
 
-# Dummy backlink data for demonstration
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+# Dummy backlink data – in a real version you'd fetch this from Ahrefs, Moz, or SEMrush API
 DUMMY_BACKLINKS = [
     {"url": "https://example.com/page1", "anchor_text": "great service", "quality": "high"},
     {"url": "https://spammy-site.com/bad-link", "anchor_text": "cheap stuff", "quality": "low"},
@@ -9,36 +11,31 @@ DUMMY_BACKLINKS = [
 ]
 
 def check_backlinks(domain):
-    openai.api_key = st.secrets["OPENAI_API_KEY"]
-
-    # Summarize backlink profile and give advice using GPT
     backlinks_summary = "\n".join(
         [f"- URL: {b['url']}, Anchor: {b['anchor_text']}, Quality: {b['quality']}" for b in DUMMY_BACKLINKS]
     )
 
     prompt = f"""
-    You are an SEO specialist analyzing backlinks.
+    Analyze the backlink profile for domain: {domain}
 
-    The following backlinks are pointing to the domain: {domain}
-
+    Here are sample backlinks:
     {backlinks_summary}
 
-    Please:
-    1. Identify any potentially harmful or low-quality backlinks.
-    2. Suggest which backlinks to keep or build upon.
-    3. Provide recommendations for improving the backlink profile.
+    Provide insights on:
+    - Which links are valuable or harmful
+    - Overall backlink quality
+    - Recommendations to improve backlink strategy
     """
 
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4",
             messages=[
-                {"role": "system", "content": "You are an SEO backlink expert."},
+                {"role": "system", "content": "You are an expert in SEO and backlink analysis."},
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.7,
+            temperature=0.7
         )
-        return response.choices[0].message.content
-
+        return response.choices[0].message.content.strip()
     except Exception as e:
         return f"❌ Error analyzing backlinks: {str(e)}"
