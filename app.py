@@ -8,7 +8,7 @@ from structure_optimizer import analyze_structure
 
 # App setup
 st.set_page_config(page_title="Seogi - Your SEO AI Mastermind", layout="wide")
-st.title("🔮 Seogi - Your SEO AI Mastermind")
+st.title("🖥️ Seogi - Your SEO AI Mastermind")
 
 # Sidebar menu
 st.sidebar.title("🧠 Seogi Menu")
