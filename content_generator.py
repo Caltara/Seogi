@@ -10,7 +10,7 @@ def generate_content_ideas(business_type, keyword):
 
 def write_blog_post(title, keyword):
     prompt = (
-        f"Write a 600-word blog post titled '{title}' optimized for SEO using the keyword '{keyword}'. "
+        f"Write a 1500-word blog post titled '{title}' optimized for SEO using the keyword '{keyword}'. "
         f"Include headings and subheadings, and end with a call to action."
     )
     return chat_with_openai(prompt)
