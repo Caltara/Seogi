@@ -90,7 +90,3 @@ elif menu == "Backlink Monitoring":
 elif menu == "Site Structure Optimization":
     st.header("🏗️ Site Structure Optimization")
     sitemap_url = st.text_input("Enter your sitemap URL (e.g. https://example.com/sitemap.xml)")
-    if st.button("Analyze Structure") and sitemap_url:
-        structure = analyze_structure(sitemap_url)
-        st.subheader("Site Structure Recommendations")
-        st.write(structure)
