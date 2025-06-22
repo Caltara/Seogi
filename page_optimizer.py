@@ -1,50 +1,38 @@
-import openai
+from openai import OpenAI
 import streamlit as st
 from bs4 import BeautifulSoup
 
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
 def optimize_page(raw_html, target_keyword):
-    openai.api_key = st.secrets["OPENAI_API_KEY"]
-
-    # Use BeautifulSoup to parse HTML and extract text & meta info
+    # Extract content from HTML
     soup = BeautifulSoup(raw_html, "html.parser")
+    title = soup.title.string if soup.title else "No title"
+    desc_tag = soup.find("meta", attrs={"name": "description"})
+    meta_desc = desc_tag["content"] if desc_tag and "content" in desc_tag.attrs else ""
+    visible_text = " ".join(soup.stripped_strings)[:300]
 
-    # Extract title and meta description if present
-    title = soup.title.string if soup.title else "No title found"
-    meta_desc = ""
-    desc_tag = soup.find("meta", attrs={"name":"description"})
-    if desc_tag and "content" in desc_tag.attrs:
-        meta_desc = desc_tag["content"]
-
-    # Extract visible text for keyword density check
-    texts = soup.stripped_strings
-    visible_text = " ".join(texts)
-
-    # Prompt for GPT to analyze the page content
+    # Prompt for GPT
     prompt = f"""
-    You are an SEO expert. Analyze the following webpage content for SEO optimization targeting the keyword: "{target_keyword}".
+    Analyze this web page content for SEO performance.
 
-    Current page title: "{title}"
-    Meta description: "{meta_desc}"
-    Page content excerpt (first 300 chars): "{visible_text[:300]}"
+    Title: "{title}"
+    Meta Description: "{meta_desc}"
+    Snippet of Visible Text: "{visible_text}"
 
-    Please:
-    1. Identify missing or weak SEO elements (title, meta description, headers).
-    2. Suggest improvements to better target the keyword.
-    3. Recommend content or structural changes to increase SEO effectiveness.
-
-    Provide actionable suggestions in a numbered list.
+    Provide detailed suggestions to improve SEO, focusing on keyword integration, readability, meta tags, headers, and structure.
+    Target keyword: "{target_keyword}"
     """
 
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4",
             messages=[
-                {"role": "system", "content": "You are an SEO optimization consultant."},
+                {"role": "system", "content": "You are an SEO consultant and page optimization expert."},
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.7,
+            temperature=0.7
         )
-        return response.choices[0].message.content
-
+        return response.choices[0].message.content.strip()
     except Exception as e:
         return f"❌ Error optimizing page: {str(e)}"
