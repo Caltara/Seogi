@@ -26,7 +26,7 @@ def optimize_page(raw_html, target_keyword):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are an SEO consultant and page optimization expert."},
                 {"role": "user", "content": prompt}
