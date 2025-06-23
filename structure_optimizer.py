@@ -27,7 +27,7 @@ def analyze_structure(sitemap_url):
         """
 
         ai_response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are an SEO site structure and architecture expert."},
                 {"role": "user", "content": prompt}
