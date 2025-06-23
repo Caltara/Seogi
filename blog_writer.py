@@ -18,7 +18,7 @@ def write_blog_post(title, keyword, audience, tone, cta):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are an expert SEO blog writer."},
                 {"role": "user", "content": prompt}
@@ -36,7 +36,7 @@ def suggest_blog_titles(keyword, audience):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are an expert SEO strategist."},
                 {"role": "user", "content": prompt}
