@@ -3,7 +3,7 @@ import streamlit as st
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-# Dummy backlink data – in a real version you'd fetch this from Ahrefs, Moz, or SEMrush API
+# Dummy backlink data – in a real app, fetch this from backlink tools APIs
 DUMMY_BACKLINKS = [
     {"url": "https://example.com/page1", "anchor_text": "great service", "quality": "high"},
     {"url": "https://spammy-site.com/bad-link", "anchor_text": "cheap stuff", "quality": "low"},
@@ -29,7 +29,7 @@ def check_backlinks(domain):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are an expert in SEO and backlink analysis."},
                 {"role": "user", "content": prompt}
