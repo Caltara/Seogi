@@ -4,7 +4,7 @@ from keyword_research import suggest_keywords
 from page_optimizer import optimize_page
 from backlink_monitor import check_backlinks
 from structure_optimizer import analyze_structure
-from seo_audit import audit_seo  # assuming you have this module updated similarly
+from seo_audit import audit_seo  # Make sure seo_audit.py also uses gpt-3.5-turbo
 
 st.set_page_config(page_title="Seogi SEO Mastermind", layout="wide")
 
